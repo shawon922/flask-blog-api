@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, make_response
 from flask_restful import Resource, Api
 from flask_restful.reqparse import RequestParser
 from flask_mysqldb import MySQL
@@ -27,7 +27,7 @@ class ArticleCollection(Resource):
         cur.execute('''SELECT id, title, content FROM articles''')
         articles = cur.fetchall()
 
-        return jsonify(articles)
+        return make_response(jsonify(articles), 200)
 
     def post(self):
         args = article_request_parser.parse_args()
@@ -36,7 +36,7 @@ class ArticleCollection(Resource):
 
         cur.execute(query)
         cur.connection.commit()
-        return { 'msg': 'New article created.', 'data': args }
+        return { 'msg': 'New article created.', 'data': args }, 201
 
 
 class Article(Resource):
@@ -46,7 +46,7 @@ class Article(Resource):
         article = cur.fetchone()
         if not article:
             return { 'error': 'article not found of id {id}'.format(id=id) }
-        return article
+        return article, 200
 
     def put(self, id):
         args = article_request_parser.parse_args()
@@ -55,7 +55,7 @@ class Article(Resource):
         cur.execute(query)
         cur.connection.commit()
 
-        return { 'msg': 'Article updated.', 'data': args }
+        return { 'msg': 'Article updated.', 'data': args }, 200
 
     def delete(self, id):
         cur = mysql.connection.cursor()
@@ -63,7 +63,7 @@ class Article(Resource):
         cur.execute(query)
         cur.connection.commit()
 
-        return { 'msg': 'Article Deleted' }
+        return { 'msg': 'Article Deleted' }, 202
 
 api.add_resource(ArticleCollection, '/articles/')
 api.add_resource(Article, '/articles/<int:id>')
