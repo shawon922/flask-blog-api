@@ -13,7 +13,7 @@
 ### To create an article:
 
 ```
-$ curl -H "Content-Type: application/json" -X POST -d '{"title": "This is title", "content": "This is content"}' http://127.0.0.1:5000/api/v1/articles/9
+$ curl -H "Content-Type: application/json" -X POST -d '{"title": "This is title", "content": "This is content"}' http://127.0.0.1:5000/api/v1/articles/
 ```
 
 ### To get all articles:
